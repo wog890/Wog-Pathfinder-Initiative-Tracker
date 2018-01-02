@@ -1,5 +1,5 @@
 const {Page, TextInput, Button, EventObject} = require('tabris');
-var base64 = require('base64');
+var base64 = require('Base64');
 global.atob = base64.atob;
 
 function addScreen() {
