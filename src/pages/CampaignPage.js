@@ -1,4 +1,15 @@
 const {Page, TextInput, Button, EventObject} = require('tabris');
+var base64 = require('base64');
+global.atob = base64.atob;
+
+function addScreen() {
+	ble.scan([], 60, function(device) {
+		console.log(JSON.stringify(device));
+	}, function(failure) {
+		/*console.log("Failure");*/
+		/*console.log(failure);*/
+	});
+}
 
 function campaignNameChanged(target) {
 	if (target.text == '') {
@@ -13,6 +24,17 @@ function campaignNameChanged(target) {
 			campaigns = campaigns !== null ? campaigns + '|' + target.text : target.text;
 			localStorage.setItem('campaigns', campaigns);
 			window.plugins.toast.showShortBottom('Campaign saved');
+		}
+	}
+}
+
+function checkCampaignNamed(txtCampaignName, action) {
+	if (txtCampaignName == 'Unnamed Campaign') {
+		window.plugins.toast.showShortBottom('Please name the campaign first');
+	}
+	else {
+		switch(action) {
+			case 'Add Screen': addScreen(); break;
 		}
 	}
 }
@@ -48,9 +70,7 @@ module.exports = class GMPage extends Page {
 			text: "Edit Factions"
 		}).on('select', () => {
 			if (campaignName.text == 'Unnamed Campaign') {
-				console.log(window);
 				window.plugins.toast.showShortBottom('Please name the campaign first!');
-				constructor.log('testing');
 			}
 		}).appendTo(this);
 		new Button({
@@ -72,11 +92,7 @@ module.exports = class GMPage extends Page {
 		new Button({
 			centerX: 0, top: ['prev()', 10],
 			text: "Add Screen"
-		}).on('select', () => {
-			if (campaignName.text == 'Unnamed Campaign') {
-				window.plugins.toast.showShortBottom('Please name the campaign first!');
-			}
-		}).appendTo(this);
+		}).on('select', () => {checkCampaignNamed(campaignName.text, 'Add Screen')}).appendTo(this);
 		new Button({
 			centerX: 0, bottom: 20,
 			text: 'Delete Campaign'
