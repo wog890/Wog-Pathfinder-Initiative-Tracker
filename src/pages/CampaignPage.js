@@ -1,14 +1,16 @@
-const {Page, TextInput, Button, EventObject} = require('tabris');
-var base64 = require('Base64');
+const {Page, TextInput, Button} = require('tabris');
+var base64 = require('base64');
 global.atob = base64.atob;
 
 function addScreen() {
-	ble.scan([], 60, function(device) {
+	ble.enable(() => {
+		console.log('Bluetooth is enabled');
+	}, () => {
+		console.log('User did not enable Bluetooth');
+	})
+	/*ble.scan([], 60, function(device) {
 		console.log(JSON.stringify(device));
-	}, function(failure) {
-		/*console.log("Failure");*/
-		/*console.log(failure);*/
-	});
+	}, function(failure) {});*/
 }
 
 function campaignNameChanged(target) {

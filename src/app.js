@@ -12,7 +12,7 @@ let mainPage = new Page({
 }).appendTo(navigationView);
 
 new TextView({
-	centerX: 0, top: 200,
+	centerX: 0, centerY: -200,
 	markupEnabled: true,
 	text: '<b><big>Which is this device for?</big></b>'
 }).appendTo(mainPage);
