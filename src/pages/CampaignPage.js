@@ -1,5 +1,22 @@
 const {Page, TextInput, Button, EventObject} = require('tabris');
 
+function campaignNameChanged(target) {
+	if (target.text == '') {
+		window.plugins.toast.showShortBottom('Please name the campaign');
+	}
+	else {
+		let campaigns = localStorage.getItem('campaigns');
+		if (campaigns !== null && campaigns.indexOf(target.text) !== -1) {
+			window.plugins.toast.showShortBottom('Campaign name ' + target.text + ' already exists. Data will be overwritten');
+		}
+		else {
+			campaigns = campaigns !== null ? campaigns + '|' + target.text : target.text;
+			localStorage.setItem('campaigns', campaigns);
+			window.plugins.toast.showShortBottom('Campaign saved');
+		}
+	}
+}
+
 function deleteCampaign(page) {
 	let textInput = page.find('#txtCampaignName')[0];
 	let sCampaigns = localStorage.getItem('campaigns');
@@ -25,28 +42,15 @@ module.exports = class GMPage extends Page {
 			message: 'Campaign Name',
 			id: 'txtCampaignName',
 			text: campaignTitle || "Unnamed Campaign"
-		}).on('accept', (target) => {
-			if (target.text == '') {
-				window.plugins.toast.showShortBottom('Please name the campaign');
-			}
-			else {
-				let campaigns = localStorage.getItem('campaigns');
-				if (campaigns !== null && campaigns.indexOf(target.text) !== -1) {
-					window.plugins.toast.showShortBottom('Campaign name ' + target.text + ' already exists. Data will be overwritten');
-				}
-				else {
-					campaigns = campaigns !== null ? campaigns + '|' + target.text : target.text;
-					localStorage.setItem('campaigns', campaigns);
-					window.plugins.toast.showShortBottom('Campaign saved');
-				}
-			}
-		}).appendTo(this);
+		}).on('accept', campaignNameChanged).appendTo(this);
 		new Button({
 			centerX: 0, top: ['prev()', 10],
 			text: "Edit Factions"
 		}).on('select', () => {
 			if (campaignName.text == 'Unnamed Campaign') {
+				console.log(window);
 				window.plugins.toast.showShortBottom('Please name the campaign first!');
+				constructor.log('testing');
 			}
 		}).appendTo(this);
 		new Button({
